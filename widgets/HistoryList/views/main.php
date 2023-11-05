@@ -1,15 +1,16 @@
 <?php
 
-use app\models\search\HistorySearch;
+use app\services\data\HistoryEventItemDataProvider;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $dataProvider ActiveDataProvider */
-/* @var $model HistorySearch */
-/* @var $linkExport string */
+/* @var $dataProvider HistoryEventItemDataProvider */
+/* @var $searchModel ActiveDataProvider */
+/* @var $eventTexts String[] */
 
 ?>
 
@@ -17,18 +18,14 @@ use yii\widgets\Pjax;
 
 <div class="panel panel-primary panel-small m-b-0">
     <div class="panel-body panel-body-selected">
-
+        <?php $form = ActiveForm::begin(['method' => 'get', 'options' => ['data-pjax' => true]]); ?>
         <div class="pull-sm-right">
-            <?php if (!empty($linkExport)) {
-                echo Html::a(Yii::t('app', 'CSV'), $linkExport,
-                    [
-                        'class' => 'btn btn-success',
-                        'data-pjax' => 0
-                    ]
-                );
-            } ?>
+            <?= $form->field($searchModel, 'event')
+                ->dropDownList($eventTexts, ['prompt' => 'Select Event Type', 'name' => 'event'])
+                ->label(false); ?>
+            <?= Html::submitButton('Filter', ['class' => 'btn btn-primary']); ?>
         </div>
-
+        <?php ActiveForm::end(); ?>
     </div>
 </div>
 
