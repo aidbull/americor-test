@@ -4,10 +4,17 @@ namespace app\widgets\Export;
 
 use kartik\export\ExportMenu;
 use Yii;
+use yii\base\Model;
+use yii\base\Widget;
 
 class Export extends ExportMenu
 {
-    public $exportType = self::FORMAT_CSV;
+    public const EXPORT_TYPES = [
+        self::FORMAT_CSV => 'CSV',
+        self::FORMAT_EXCEL_X => 'Excel'
+    ];
+
+    public $exportType;
 
     public function init()
     {

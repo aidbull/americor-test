@@ -3,6 +3,7 @@
 namespace app\models\search;
 
 use app\models\History;
+use app\services\providers\HistoryEventItemDataProvider;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -13,12 +14,16 @@ use yii\data\ActiveDataProvider;
  */
 class HistorySearch extends History
 {
+    public $event;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
-        return [];
+        return [
+            [['event'], 'safe'],
+        ];
     }
 
     /**
@@ -41,9 +46,7 @@ class HistorySearch extends History
     {
         $query = History::find();
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
+        $dataProvider = new HistoryEventItemDataProvider([
             'query' => $query,
         ]);
 
@@ -54,7 +57,7 @@ class HistorySearch extends History
             ],
         ]);
 
-        $this->load($params);
+        $this->load($params, '');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -71,6 +74,10 @@ class HistorySearch extends History
             'call',
             'fax',
         ]);
+
+        if ($this->event) {
+            $query->andWhere(['event' => $this->event]);
+        }
 
         return $dataProvider;
     }
